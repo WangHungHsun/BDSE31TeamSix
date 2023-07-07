@@ -7,7 +7,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn import preprocessing
 
 
-df = pd.read_csv("D:/期中專題/creditcard./credit_record.csv")
+df = pd.read_csv("./credit_record.csv")
 x= df["STATUS"].value_counts()['C']
 print(x)
 
