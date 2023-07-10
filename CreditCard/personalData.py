@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-oringinalDf = pd.read_csv("D:/期中專題/BDSE31TeamSix/CreditCard/personalData.csv")
+oringinalDf = pd.read_csv("BDSE31TeamSix\CreditCard\personalData.csv")
 df = oringinalDf.rename(columns={'CODE_GENDER':'GENDER','FLAG_OWN_CAR':'OWNCAR','FLAG_OWN_REALTY':'REALTY','CNT_CHILDREN':'CHILDREN',
 'AMT_INCOME_TOTAL':'INCOME','NAME_INCOME_TYPE':'INCOME_TYPE','NAME_EDUCATION_TYPE':'EDUCATION','NAME_FAMILY_STATUS':'FAMILY_STATUS',
 'NAME_HOUSING_TYPE':'HOUSING_TYPE','OCCUPATION_TYPE':'JOB','CNT_FAM_MEMBERS':'FAMILY_MEMBERS'})
@@ -21,7 +21,7 @@ df = df.drop(columns=['FLAG_MOBIL','FLAG_WORK_PHONE','FLAG_PHONE','FLAG_EMAIL'])
 
 for col in df.columns:
     print(col)
-print(df['FAMILY_MEMBERS'].value_counts())
+print(df['JOB'].value_counts())
 print(df.columns)
 # total = df["STATUS"].count()
 # c = df["STATUS"].value_counts()['C']

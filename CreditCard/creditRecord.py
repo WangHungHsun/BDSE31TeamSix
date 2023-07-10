@@ -3,7 +3,7 @@ import numpy as np
 
 
 
-df = pd.read_csv("D:/期中專題/BDSE31TeamSix/CreditCard/credit_record.csv")
+df = pd.read_csv("BDSE31TeamSix/CreditCard/credit_record.csv")
 print(df.describe)
 total = df["STATUS"].count()
 c = df["STATUS"].value_counts()['C']
