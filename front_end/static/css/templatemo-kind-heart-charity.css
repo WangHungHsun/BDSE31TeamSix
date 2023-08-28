@@ -66,7 +66,7 @@ https://templatemo.com/tm-581-kind-heart-charity
   --h3-font-size: 32px;
   --h4-font-size: 28px;
   --h5-font-size: 24px;
-  --h6-font-size: 16px;
+  --h6-font-size: 18px;
   --p-font-size: 16px;
   --btn-font-size: 18px;
   --copyright-font-size: 14px;
@@ -568,7 +568,8 @@ strong {
 
 .carousel:hover .carousel-control-next-icon,
 .carousel:hover .carousel-control-prev-icon {
-  opacity: 1;
+  /* opacity: 1; */
+  opacity: 80%;
 }
 
 #hero-slide .carousel-item {
@@ -577,15 +578,19 @@ strong {
 }
 
 #hero-slide .carousel-caption {
+  /* 更改首頁上的白色區域 */
   background: var(--white-color);
-  clip-path: polygon(100% 100%, 100% 150px, 0 100%);
+  /* clip-path: polygon(100% 100%, 100% 150px, 0 100%); */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
   color: var(--secondary-color);
   top: 1px;
   bottom: -1px;
   right: 0;
   left: auto;
-  text-align: right;
-  min-width: 680px;
+  /* text-align: right; */
+  text-align: left;
+  /* min-width: 680px; */
+  min-width: 980px;
   min-height: 680px;
   padding: 100px 100px 50px 100px;
 }
@@ -763,7 +768,7 @@ strong {
   DONATE              
 -----------------------------------------*/
 .donate-section {
-  background-image: url('../images/program in financial services.jpg');
+  background-image: url('../images/different-people-doing-volunteer-work.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
