@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> BDSE Team Six Credit Scoring System </title>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <!-- CSS FILES -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/templatemo-kind-heart-charity.css') }}" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <header class="site-header">{% include "_header.html"%}</header>
+    <nav class="navbar navbar-expand-lg bg-light shadow-lg">{% include "_navbar.html"%}</nav>
+    <main>
+
+        <section class="donate-section">
+            <div class="section-overlay"></div>
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-12 mx-auto">
+                        <form class="custom-form donate-form" action="#" method="post" role="form">
+                            <h3 class="mb-4">Personal Information</h3>
+
+                            <div class="row">
+
+                                <div class="col-lg-12 col-12">
+                                    <h5 class="mt-1">Personal Info</h5>
+                                </div>
+
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <input type="text" name="form-name" id="form-name" class="form-control"
+                                        placeholder="Name" required>
+                                </div>
+
+                                <!-- 新增性别字段 -->
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <select name="form-gender" id="form-gender" class="form-control" required>
+                                        <option value="" disabled selected>Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+
+                                <!-- 新增歲數字段 -->
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <input type="text" name="form-age" id="form-age" class="form-control"
+                                        placeholder="Age" required>
+                                </div>
+
+                                <!-- 新增婚姻状况字段 -->
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <select name="form-marital-status" id="form-marital-status" class="form-control"
+                                        required>
+                                        <option value="" disabled selected>Marital Status</option>
+                                        <option value="single">Single</option>
+                                        <option value="married">Married</option>
+                                        <option value="divorced">Divorced</option>
+                                        <option value="widowed">Widowed</option>
+                                        <option value="unknown">Unknown</option>
+                                    </select>
+                                </div>
+
+                                <!-- 新增教育程度字段 -->
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <select name="form-education-level" id="form-education-level" class="form-control"
+                                        required>
+                                        <option value="" disabled selected>Education Level</option>
+                                        <option value="high-school">High School</option>
+                                        <option value="college">College</option>
+                                        <option value="university">University</option>
+                                        <option value="graduate">Graduate Degree</option>
+                                    </select>
+                                </div>
+
+                                <!-- 新增年收入字段 -->
+
+
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+
+                                        <input type="text" name="form-annual-income" id="form-annual-income"
+                                            class="form-control" placeholder="Annual Income" aria-label="Username"
+                                            aria-describedby="basic-addon1" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-12 mt-2 ">
+                                    <select name="form-income_type" id="form-income_type" class="form-control" required>
+                                        <option value="" disabled selected>Select Income Type</option>
+                                        <option value="working">Working</option>
+                                        <option value="commercial_associate">Commercial Associate</option>
+                                        <option value="pensioner">Pensioner</option>
+                                        <option value="state_servant">State Servant</option>
+                                        <option value="unemployed">Unemployed</option>
+                                        <option value="student">Student</option>
+                                        <option value="businessman">Businessman</option>
+                                        <option value="maternity_leave">Maternity Leave</option>
+                                    </select>
+                                </div>
+
+
+                                <!-- 新增职业字段 -->
+                                <div class="col-lg-6 col-12 mt-2 ">
+                                    <select name="form-occupation" id="form-occupation" class="form-control" required>
+                                        <option value="" disabled selected>Select Occupation</option>
+                                        <option value="">nan</option>
+                                        <option value="Laborers">Laborers</option>
+                                        <option value="Sales staff">Sales staff</option>
+                                        <option value="Core staff">Core staff</option>
+                                        <option value="Managers">Managers</option>
+                                        <option value="Drivers">Drivers</option>
+                                        <option value="Accountants">Accountants</option>
+                                        <option value="Medicine staff">Medicine staff</option>
+                                        <option value="Security staff">Security staff</option>
+                                        <option value="Cooking staff">Cooking staff</option>
+                                        <option value="Cleaning staff">Cleaning staff</option>
+                                        <option value="Private service staff">Private service staff</option>
+                                        <option value="Low-skill Laborers">Low-skill Laborers</option>
+                                        <option value="High skill tech staff">High skill tech staff</option>
+                                        <option value="Waiters/barmen staff">Waiters/barmen staff</option>
+                                        <option value="Secretaries">Secretaries</option>
+                                        <option value="Realty agents">Realty agents</option>
+                                        <option value="HR staff">HR staff</option>
+                                        <option value="IT staff">IT staff</option>
+                                    </select>
+                                </div>
+
+
+
+
+                                <div class="col-lg-12 col-12">
+                                    <h5 class="mt-1">Property Status</h5>
+
+                                </div>
+
+                                <div class="col-lg-6 col-6 form-check-group form-check-group-form-frequency">
+                                    <div class="form-check form-check-checkbox">
+                                        <input class="form-check-input" name="form-own-realty" id="form-own-realty"
+                                            type="checkbox">
+                                        <label class="form-check-label" for="form-own-realty">
+                                            Own Realty
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6 col-6 form-check-group form-check-group-form-frequency">
+                                    <div class="form-check form-check-checkbox">
+                                        <input class="form-check-input" name="form-own-car" id="form-own-car"
+                                            type="checkbox">
+                                        <label class="form-check-label" for="form-own-car">
+                                            Own Car
+                                        </label>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-lg-12 col-12">
+                                    <h5 class="mt-1">Credit Info</h5>
+                                </div>
+                                <h6 class="mt-1">(If you don't have any loans, you may leave the following fields
+                                    blank.)
+                                </h6>
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <select name="form-loan-type" id="form-loan-type" class="form-control">
+                                        <option value="" disabled selected>Select Loan Type</option>
+                                        <option value="consumerCredit">Consumer credit</option>
+                                        <option value="creditCard">Credit card</option>
+                                        <option value="carLoan">Car loan</option>
+                                        <option value="cashLoan">Cash loan</option>
+                                        <option value="mortgage">Mortgage</option>
+                                        <option value="microloan">Microloan</option>
+                                        <option value="businessDevelopment">Business development</option>
+                                        <option value="workingCapitalReplenishment">Working capital replenishment
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <input type="text" name="form-lona-period" id="form-lona-period"
+                                        class="form-control" placeholder="Loan Period">
+                                </div>
+
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+
+                                        <input type="text" name="form-amount-annuity" id="form-amount-annuity"
+                                            class="form-control" placeholder="Amount Annuity" aria-label="Username"
+                                            aria-describedby="basic-addon1">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6 col-12 mt-2">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">$</span>
+
+                                        <input type="text" name="form-amount-credit" id="form-amount-credit"
+                                            class="form-control" placeholder="Amount Credit" aria-label="Username"
+                                            aria-describedby="basic-addon1">
+                                    </div>
+                                </div>
+                                <button type="submit" class="form-control mt-4">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="site-footer-bottom" style="margin-top: 0%;">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-md-7 col-12">
+                        <p class="copyright-text mb-0">Copyright © 2023 BDSE TEAM SIX : CREDIT SCORING SYSTEM <a
+                                href="https://templatemo.com" target="_blank"></a></p>
+                    </div>
+
+                    <!-- <div class="col-lg-6 col-md-5 col-12 d-flex justify-content-center align-items-center mx-auto">
+                        <ul class="social-icon">
+                            <li class="social-icon-item">
+                                <a href="#" class="social-icon-link bi-linkedin"></a>
+                            </li>
+
+                            <li class="social-icon-item">
+                                <a href="https://youtube.com/templatemo" class="social-icon-link bi-youtube"></a>
+                            </li>
+                        </ul>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT FILES -->
+
+
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/counter.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+
+</body>
+
+</html>
