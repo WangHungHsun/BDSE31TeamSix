@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> BDSE Team Six Credit Scoring System </title>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS FILES -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/templatemo-kind-heart-charity.css') }}" rel="stylesheet">
+
+</head>
+
+
+<body>
+    <header class="site-header">{% include "_header.html"%}</header>
+    <nav class="navbar navbar-expand-lg bg-light shadow-lg">{% include "_navbar.html"%}</nav>
+
+    <body>
+        <link rel="stylesheet" type="text/css" href="navbar.css">
+        <main>
+            <section class="section-padding" id="section_3">
+                <div class="container">
+
+                    <div class="row">
+                        <div>
+                            <h1 style="color: #66cdaa;">Welcome! {{data['form-name']}}</h1>
+                        </div>
+
+                        <div class="col-lg-12 col-12 text-center mb-4">
+                            <h2>Results</h2>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
+                            <div class="custom-block-wrap">
+
+                                <div class="custom-block">
+                                    <div class="custom-block-body" style="padding-top: auto;">
+                                        <h3 class="mb-3" style="text-align: center;padding-bottom: 2px;">Summary</h3>
+                                        <ul style="
+                                    flex: 1; 
+                                    list-style-type: disc; 
+                                    padding: 0; 
+                                    text-align: left;
+                                    ">
+                                            <li style=" 
+                                    font-weight: bold;
+                                    font-size: 32px; 
+                                    ">
+                                                Scoring: {{ (prediction | round(2))}}
+                                            </li>
+                                            <li style=" 
+                                    font-size: 32px; 
+                                    font-weight: bold;
+                                    ">
+                                                Annual income: {{ data['form-annual-income'] }}
+                                            </li>
+                                            <li style=" 
+                                    font-size: 32px; 
+                                    font-weight: bold;
+                                    ">
+                                                {% if data.get('form-own-car') %}
+                                                Own Car: Yes
+                                                {% else %}
+                                                Own Car: No
+                                                {% endif %}
+                                            </li>
+                                            <li style=" 
+                                    font-size: 32px; 
+                                    font-weight: bold;
+                                    ">
+                                                {% if data.get('form-own-realty') %}
+                                                Own Realty: Yes
+                                                {% else %}
+                                                Own Realty: No
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
+                            <div class="custom-block-wrap">
+
+                                <div class="custom-block">
+                                    <div class="custom-block-body">
+
+                                        <input type="hidden" id="roundedPrediction" value="{{ (prediction)}}">
+                                        <h3 class="mb-3" style="text-align: center;">Scoring</h3>
+                                        <div id="gauge-chart">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
+                            <div class="custom-block-wrap">
+                                <div class="custom-block">
+                                    <div class="custom-block-body">
+                                        <h5 class="mb-3">Annual Income</h5>
+
+                                        <div id="income-chart">
+                                            {{ income_plot_html | safe }}
+                                        </div>
+
+                                    </div>
+                                    <div class="custom-btn btn">
+                                        You're in {{ income_category }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
+                            <div class="custom-block-wrap">
+
+                                <div class="custom-block">
+                                    <div class="custom-block-body">
+                                        <h5 class="mb-3">Occupation Type</h5>
+                                        <div>
+                                            <div id="second_chart_placeholder">{{ occupation_plot_html | safe }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="custom-btn btn">You're {{ occupation_type }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="custom-block-wrap">
+                                <div class="custom-block">
+                                    <div class="custom-block-body">
+                                        <h5 class="mb-3">Age</h5>
+
+                                        <div id="age-chart">
+                                            {{ age_plot_html | safe }}
+                                        </div>
+                                    </div>
+
+                                    <div class="custom-btn btn">You're {{ age_category }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            <!-- {% if form_data %}
+                            <h1>Prediction Results</h1>
+                            {% for field_name, field_value in form_data.items() %}
+                                <p>{{ field_name }}: {{ field_value }}</p>
+                            {% endfor %}
+                            {% else %}
+                            <p>No form data submitted.</p>
+                            {% endif %} -->
+        </main>
+        <footer class="site-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-12 mb-4">
+                        <img src="../static/images/logo.png" class="logo img-fluid" alt="">
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-12 mb-4">
+                        <h5 class="site-footer-title mb-3">Quick Links</h5>
+
+                        <ul class="footer-menu">
+                            <li class="footer-menu-item"><a href="#" class="footer-menu-link">Our Story</a></li>
+
+                            <li class="footer-menu-item"><a href="#" class="footer-menu-link">Newsroom</a></li>
+
+                            <li class="footer-menu-item"><a href="#" class="footer-menu-link">Causes</a></li>
+
+                            <li class="footer-menu-item"><a href="#" class="footer-menu-link">Become a volunteer</a>
+                            </li>
+
+                            <li class="footer-menu-item"><a href="#" class="footer-menu-link">Partner with us</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-12 mx-auto">
+                        <h5 class="site-footer-title mb-3">Contact Infomation</h5>
+
+                        <p class="text-white d-flex mb-2">
+                            <i class="bi-telephone me-2"></i>
+
+                            <a href="tel: 120-240-9600" class="site-footer-link">
+                                120-240-9600
+                            </a>
+                        </p>
+
+                        <p class="text-white d-flex">
+                            <i class="bi-envelope me-2"></i>
+
+                            <a href="mailto:donate@charity.org" class="site-footer-link">
+                                donate@charity.org
+                            </a>
+                        </p>
+
+                        <p class="text-white d-flex mt-3">
+                            <i class="bi-geo-alt me-2"></i>
+                            Akershusstranda 20, 0150 Oslo, Norway
+                        </p>
+
+                        <a href="#" class="custom-btn btn mt-3">Get Direction</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="site-footer-bottom">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-7 col-12">
+                            <p class="copyright-text mb-0">Copyright © 2036 <a href="#">Kind Heart</a> Charity Org.
+                                Design: <a href="https://templatemo.com" target="_blank">TemplateMo</a></p>
+                        </div>
+
+                        <div class="col-lg-6 col-md-5 col-12 d-flex justify-content-center align-items-center mx-auto">
+                            <ul class="social-icon">
+                                <!-- <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-twitter"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-facebook"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-instagram"></a>
+                                </li> -->
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-linkedin"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="https://youtube.com/templatemo" class="social-icon-link bi-youtube"></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+
+        var gaugeDiv = document.getElementById("gauge-chart");
+
+        // 獲取預測結果（這是一個示例值，你需要在實際情況中動態獲取）
+        var roundedPrediction = parseFloat(document.getElementById('roundedPrediction').value);
+
+        var predictionValue = roundedPrediction * 100;
+
+        // 根据预测结果百分比确定区间
+        var interval;
+        if (predictionValue < 20) {
+            interval = "Very Low";
+        } else if (predictionValue < 40) {
+            interval = "Low";
+        } else if (predictionValue < 60) {
+            interval = "Average";
+        } else if (predictionValue < 80) {
+            interval = "Good";
+        } else {
+            interval = "Excellent";
+        }
+
+        var traceA = {
+            type: "pie",
+            showlegend: false,
+            hole: 0.7,
+            sort: false,
+            values: [
+                predictionValue,
+                100 - predictionValue,
+            ],  // 这里的值根据您的需求进行调整
+            text: ["", ""],
+            direction: "clockwise",
+            textinfo: "text",
+            textposition: "inside",
+            marker: {
+                colors: ['rgba(0, 123, 255, 0.8)', 'rgba(211, 211, 211, 0.4)']
+            },
+            labels: ["您的評分", ""],
+            hoverinfo: "label"
+        };
+
+        if (predictionValue < 20) {
+            traceA.marker.colors[0] = 'rgba(255, 0, 0, 0.8)'; // 设置 "Very Low" 区间的颜色
+            traceA.labels[0] = "Very Low"; // 设置 "Very Low" 区间的标签
+        } else if (predictionValue < 40) {
+            traceA.marker.colors[0] = 'rgba(255, 165, 0, 0.8)'; // 设置 "Low" 区间的颜色
+            traceA.labels[0] = "Low"; // 设置 "Low" 区间的标签
+        } else if (predictionValue < 60) {
+            traceA.marker.colors[0] = 'rgba(255, 255, 0, 0.8)'; // 设置 "Average" 区间的颜色
+            traceA.labels[0] = "Average"; // 设置 "Average" 区间的标签
+        } else if (predictionValue < 80) {
+            traceA.marker.colors[0] = 'rgba(144, 238, 144, 0.8)'; // 设置 "Good" 区间的颜色
+            traceA.labels[0] = "Good"; // 设置 "Good" 区间的标签
+        } else {
+            traceA.marker.colors[0] = 'rgba(0,128,0,0.8)'; // 设置 "Excellent" 区间的颜色
+            traceA.labels[0] = "Excellent"; // 设置 "Excellent" 区间的标签
+        }
+
+        // 创建一个注释，放置标题
+        var titleAnnotation = {
+            x: 0.5,  // 设置注释的 x 位置为圆心
+            y: 0.5,  // 设置注释的 y 位置为圆心
+            showarrow: false,  // 不显示箭头
+            text: predictionValue.toFixed(2),  // 标题文本
+            font: {
+                size: 50,
+                color: "black",  // 标题文本的颜色
+                weight: "bold"
+            }
+        };
+
+        // 更新文本和颜色以匹配区间
+        var layout = {
+
+            annotations: [titleAnnotation],  // 添加标题注释
+            xaxis: { visible: false },  // 隐藏 x 轴
+            yaxis: { visible: false },  // 隐藏 y 轴
+            showlegend: false,
+            margin: {
+                t: 2,  // 上边距
+                b: 'auto',  // 下边距
+                l: 0,  // 左边距
+                r: 0   // 右边距
+            }
+        };
+
+        var data = [traceA];
+
+        Plotly.newPlot(gaugeDiv, data, layout); // 使用 Plotly.newPlot() 创建图表
+
+        var ageChart = document.getElementById('age-chart');
+
+        // 创建点击事件处理函数
+        ageChart.on('plotly_click', function (data) {
+            // 获取用户点击的年龄分类
+            var selectedAgeCategory = data.points[0].x;
+
+            // 使用 AJAX 或其他方式将选定的年龄分类发送到服务器端进行数据库查询
+            $.ajax({
+                type: 'POST',
+                url: '/form',  // 这是服务器端路由的 URL
+                data: { age_category: selectedAgeCategory },
+                success: function (response) {
+                    // 在此处更新收入图表和职业图表等内容
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+            // 这里只是示例，你需要根据你的服务器端和数据库结构进行实际实现
+            // 以下是一个简单的示例，使用 fetch 函数发送 GET 请求到服务器
+            fetch('/update_income_chart?age_category=' + selectedAgeCategory)
+                .then(response => response.json())
+                .then(data => {
+                    // 在这里处理从服务器返回的数据
+                    // 数据可以包括更新后的收入图表信息
+                    // 你可以使用 Plotly 或其他图表库更新收入图表
+                    // 使用 Plotly.js 或其他图表库更新图表
+                    Plotly.react('income-chart', incomeFig.data, incomeFig.layout);
+                    Plotly.react('occupation-chart', occupationFig.data, occupationFig.layout);
+                    Plotly.react('age-chart', ageFig.data, ageFig.layout);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+    </script>
+
+</body>
+
+
+</html>
