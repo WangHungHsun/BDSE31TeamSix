@@ -1,29 +1,37 @@
-from flask import Flask, render_template, request, url_for, jsonify
-from datetime import datetime
+from flask import Flask, render_template, request, url_for, jsonify, redirect, Markup
 from pathlib import Path
 import joblib
-import xgboost as xgb
 import mysql.connector
 import plotly.graph_objs as go
 import numpy as np
-import socket
-import dash
-from dash import dcc
-from dash import html
-from dash.dependencies import Input, Output
 import pandas as pd
+import threading
+import queue 
+import socket 
 
 app = Flask(__name__)
 
-# 创建Dash应用程序
-app_dash = dash.Dash(__name__)
+# # 创建一个全局队列
+# task_queue = queue.Queue()
 
-# 添加布局
-app_dash.layout = html.Div([
-    dcc.Graph(id='income-chart'),
-    dcc.Graph(id='occupation-chart'),
-    dcc.Graph(id='age-chart')
-])
+# # 定义一个函数来处理队列中的任务
+# def process_queue():
+#     while True:
+#         try:
+#             # 从队列中获取任务
+#             task = task_queue.get()
+#             if task is None:
+#                 break  # 如果任务为None，退出循环
+#             # 执行任务
+#             execute_task(task)
+#             task_queue.task_done()
+#         except Exception as e:
+#             print(f"Error processing task: {str(e)}")
+
+# # 在应用启动时启动处理队列的线程
+# queue_thread = threading.Thread(target=process_queue)
+# queue_thread.daemon = True
+# queue_thread.start()
 
 mysql_config = {
     'host': '172.22.34.127',
@@ -35,7 +43,7 @@ mysql_config = {
 }
 
 # 从CSV文件中加载默认值列
-csv_data = pd.read_csv('./final_cloumns_mode.csv')
+csv_data = pd.read_csv('final_cloumns_mode.csv')
 
 # 选择希望用作默认值的列
 feature_columns = [col for col in csv_data.columns if col not in ['TARGET']]
@@ -53,6 +61,9 @@ for column in default_columns:
 def index():
     return render_template("index.html", page_header="page_header")
 
+# @app.route("/loading.html")
+# def loading():
+#     return render_template("loading.html")
 
 @app.route('/form', methods=['GET', 'POST'])
 def form():
@@ -66,8 +77,18 @@ def form():
         occupation_type = str(request.form['form-occupation'])
         # 获取用户在表单中输入的年龄
         form_age = int(request.form['form-age'])
+        
+        # 将数据传递给 scoring 视图
+        return redirect(url_for('scoring', form_annual_income=form_annual_income, occupation_type=occupation_type, form_age=form_age, data=data))
 
-        # 连接到数据库
+@app.route('/scoring.html', methods=['GET'])
+def scoring():
+        
+        data = request.args.get('data')
+        form_annual_income = float(request.args.get('form_annual_income'))
+        occupation_type = str(request.args.get('occupation_type'))
+        form_age = int(request.args.get('form_age'))
+
         connection = mysql.connector.connect(**mysql_config)
         cursor = connection.cursor()
 
@@ -233,129 +254,6 @@ def form():
         fig = go.Figure(data=bar_data, layout=age_layout)
         # 将图表转换为HTML代码
         age_plot_html = fig.to_html()
-    
-        def update_charts(income_click_data, occupation_click_data, age_click_data):
-            # 在这里根据用户的点击事件更新图表数据
-            # 这里示例代码，请根据实际需求更新图表数据
-
-            # 用户点击收入图表
-            if income_click_data:
-                selected_income_category = income_click_data['points'][0]['x']
-
-                # 使用 selected_income_category 查询相应数据
-                cursor.execute("SELECT OCCUPATION_TYPE, AGE_CATEGORY FROM test WHERE AMT_INCOME_TOTAL = %s", (selected_income_category,))
-                result = cursor.fetchall()
-                if result:
-                    selected_occupation = result[0][0]
-                    selected_age_category = result[0][1]
-
-                    # 使用选定的职业和年龄区间来查询相应的数据
-                    # 查询职业图表数据
-                    cursor.execute("SELECT COUNT(*) FROM test WHERE OCCUPATION_TYPE = %s", (selected_occupation,))
-                    occupation_count = cursor.fetchone()[0]
-
-                    # 查询年龄图表数据
-                    cursor.execute("SELECT COUNT(*) FROM test WHERE AGE_CATEGORY = %s", (selected_age_category,))
-                    age_count = cursor.fetchone()[0]
-
-                    # 创建职业图表
-                    occupation_fig = go.Figure()
-                    occupation_fig.add_trace(go.Bar(x=[selected_occupation], y=[occupation_count], name="Selected Occupation"))
-                    occupation_fig.update_layout(title='Occupation Distribution', xaxis_title='Occupation Type', showlegend=False)
-
-                    # 创建年龄图表
-                    age_fig = go.Figure()
-                    age_fig.add_trace(go.Bar(x=[selected_age_category], y=[age_count], name="Selected Age Category"))
-                    age_fig.update_layout(title='Age Distribution', xaxis_title='Age Category', showlegend=False)
-
-
-            # 用户点击职业图表
-            if occupation_click_data:
-                selected_occupation = occupation_click_data['points'][0]['x']
-
-                # 使用 selected_occupation 查询相应数据
-                cursor.execute("SELECT AMT_INCOME_TOTAL, AGE_CATEGORY FROM test WHERE OCCUPATION_TYPE = %s", (selected_occupation,))
-                result = cursor.fetchall()
-                if result:
-                    selected_income_category = result[0][0]
-                    selected_age_category = result[0][1]
-
-                    # 示例：从 MySQL 中查询收入图表数据
-                    cursor.execute("SELECT COUNT(*) FROM test WHERE AMT_INCOME_TOTAL = %s", (selected_income_category,))
-                    income_data = [int(row[0]) for row in cursor.fetchall()]
-
-                    # 示例：从 MySQL 中查询年龄图表数据
-                    cursor.execute("SELECT COUNT(*) FROM test WHERE AGE_CATEGORY = %s", (selected_age_category,))
-                    age_data = [int(row[0]) for row in cursor.fetchall()]
-
-                    # 创建年收图表
-                    income_fig = go.Figure()
-                    income_fig.add_trace(go.Bar(x=[selected_income_category], y=[income_counts], name="Selected Income Category"))
-                    income_fig.update_layout(title='Income Distribution', xaxis_title='Income Type', showlegend=False)
-
-                    # 创建年龄图表
-                    age_fig = go.Figure()
-                    age_fig.add_trace(go.Bar(x=[selected_age_category], y=[age_count], name="Selected Age Category"))
-                    age_fig.update_layout(title='Age Distribution', xaxis_title='Age Category', showlegend=False)
-
-                    # 创建职业图表
-                    occupation_fig = go.Figure()
-                    occupation_fig.add_trace(go.Bar(x=[selected_occupation], y=[occupation_count], name="Selected Occupation"))
-                    occupation_fig.update_layout(title='Occupation Distribution', xaxis_title='Occupation Type', showlegend=False)
-
-            # 用户点击年龄图表
-            if age_click_data:
-                selected_age_category = age_click_data['points'][0]['x']
-
-                # 使用 selected_age_category 查询相应数据
-                cursor.execute("SELECT OCCUPATION_TYPE, AMT_INCOME_TOTAL FROM test WHERE AGE_CATEGORY = %s", (selected_age_category,))
-                result = cursor.fetchall()
-                if result:
-                    selected_occupation = result[0][0]
-                    selected_income_category = result[0][1]
-
-                    # 示例：从 MySQL 中查询职业图表数据
-                    cursor.execute("SELECT COUNT(*) FROM test WHERE OCCUPATION_TYPE = %s", (selected_occupation,))
-                    occupation_data = [int(row[0]) for row in cursor.fetchall()]
-
-                    # 示例：从 MySQL 中查询收入图表数据
-                    cursor.execute("SELECT COUNT(*) FROM test WHERE AMT_INCOME_TOTAL = %s", (selected_income_category,))
-                    income_data = [int(row[0]) for row in cursor.fetchall()]
-
-                    # 创建年收图表
-                    income_fig = go.Figure()
-                    income_fig.add_trace(go.Bar(x=[selected_income_category], y=[income_counts], name="Selected Income Category"))
-                    income_fig.update_layout(title='Income Distribution', xaxis_title='Income Type', showlegend=False)
-
-                    # 构建图表数据和布局
-            income_chart_data = {
-                'data': income_data,
-                'layout': income_layout
-            }
-
-            occupation_chart_data = {
-                'data': occupation_data,
-                'layout': occupation_layout
-            }
-
-            age_chart_data = {
-                'data': age_data,
-                'layout': age_layout
-            }
-
-            # 返回数据，可以是一个 JSON 对象
-            response_data = {
-                'income_chart_data': income_chart_data,
-                'occupation_chart_data': occupation_chart_data,
-                'age_chart_data': age_chart_data
-            }
-
-            return jsonify(response_data)
-
-
-            
-
-            # return income_fig, occupation_fig, age_fig
 
         # 断开数据库连接
         cursor.close()
@@ -519,27 +417,27 @@ def form():
         # 使用模型进行预测
         prediction = model.predict_proba([model_input])[0][0]
 
-        # 將預測結果傳遞至 scoring.html
+
         return render_template("scoring.html",
-                       data=data,
-                       form_annual_income=form_annual_income,
-                       income_category=income_category,
-                       prediction=prediction,
-                       income_plot_html=income_plot_html,
-                       occupation_plot_html=occupation_plot_html,
-                       occupation_type=occupation_type,
-                       age_category=age_category,
-                       age_plot_html=age_plot_html)
+                                data=data,
+                                form_annual_income=form_annual_income,
+                                income_category=income_category,
+                                prediction=prediction,
+                                income_plot_html=income_plot_html,
+                                occupation_plot_html=occupation_plot_html,
+                                occupation_type=occupation_type,
+                                age_category=age_category,
+                                age_plot_html=age_plot_html)
 
-
-
-# @app.route('/scoring', methods=['POST'])
+# @app.route('/scoring.html', methods=['GET'])
 # def scoring():
-#     form_data = request.form.get('form_data')
-#     # Parse the form_data string to extract individual field values
-#     # ... Process the data as needed
-#     return render_template("scoring.html", form_data=form_data)
+#     # 這裡放置 scoring.html 頁面的渲染邏輯，使用傳遞過來的參數進行渲染
+#     return render_template("scoring.html", **request.args)
 
+@app.route('/loading.html', methods=['GET'])
+def loading():
+    # 返回 loading.html 文件
+    return render_template("loading.html")
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8080)

@@ -1,0 +1,1 @@
+docker run --net=host -e NGROK_AUTHTOKEN=填token -d --restart=always --name ngrok ngrok/ngrok:latest http 172.22.34.129:8080

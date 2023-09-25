@@ -1,0 +1,31 @@
+★ubuntu22.04 lts
+★已安裝/設定
+  openssh jdk8 sudonopassword 
+
+★已縮小硬碟檔:sudo /usr/bin/vmware-toolbox-cmd disk shrink
+★已裝好docker命令:sudo apt install docker.io
+
+----------------------------------------------------------------
+
+★★★★★
+改docker\ngrokdocker.sh 裡面的token參數
+改docker\shell\autoGetUrl.sh 最上面三個的參數
+★★★★★ 
+1.start.bat   (選擇copy)
+
+2.cat ~/.ssh/id_rsa.pub(將公鑰給github做連接)<建議更換鑰匙>
+
+3.set.bat
+
+4..sudo nano /etc/netplan/00-installer-config.yaml  更改ip
+
+5.sudo nano /etc/hostname 更改虛擬電腦名稱
+
+6.sudo nano /etc/hosts 想要吃叢集要改dns較方便
+
+----------------------------------------------------------------
+sudo nano /etc/group
+
+#####
+docker:x:119:bigred   (只要加到這個群組就是管理者)
+#####
